@@ -1,0 +1,4 @@
+matplotlib
+networkx
+numpy==1.19.3
+scipy
