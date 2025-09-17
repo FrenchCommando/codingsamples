@@ -41,7 +41,7 @@ def linear(d_quotes):
     return clf
 
 
-def display_stuff(d, out):
+def display_stuff(d, out, tag):
     matplotlib.use('TkAgg')  # Or 'Qt5Agg' or 'Qt4Agg'
     strikes = np.array(list(d.keys()))
     asks = np.array(list(u["Ask"] for u in d.values()))
@@ -50,7 +50,7 @@ def display_stuff(d, out):
     def find_separation(k):
         q_max = d[k]["Ask"] + 10
         q_min = d[k]["Bid"] - 10
-        q_range = np.linspace(q_min, q_max, 100)
+        q_range = np.linspace(q_min, q_max, 1000)
         p = [[k, u] for u in q_range]
         pp = out.predict(p)
         # print(p)
@@ -61,7 +61,7 @@ def display_stuff(d, out):
 
     separation = np.array(list(find_separation(k=u) for u in strikes))
 
-    plt.figure("Quotes")
+    plt.figure(f"Quotes{tag}")
     plt.scatter(strikes, asks, label="Ask", marker=7)
     plt.scatter(strikes, bids, label="Bid", marker=6)
     plt.scatter(strikes, separation, label="Separation", marker='x')
@@ -71,11 +71,11 @@ def display_stuff(d, out):
     plt.minorticks_on()
     plt.grid(visible=True, alpha=0.8, which='major')
     plt.grid(visible=True, alpha=0.2, which='minor')
-    plt.title("Quotes")
+    plt.title(f"Quotes{tag}")
 
-    plt.savefig("Quotes.png")
+    plt.savefig(f"Quotes{tag}.png")
 
-    plt.figure("Diffs")
+    plt.figure(f"Diffs{tag}")
     plt.scatter(strikes, asks-separation, label="Ask", marker=7)
     plt.scatter(strikes, bids-separation, label="Bid", marker=6)
     plt.legend()
@@ -84,15 +84,13 @@ def display_stuff(d, out):
     plt.minorticks_on()
     plt.grid(visible=True, alpha=0.8, which='major')
     plt.grid(visible=True, alpha=0.2, which='minor')
-    plt.title("Diffs")
+    plt.title(f"Diffs{tag}")
 
-    plt.savefig("Diffs.png")
+    plt.savefig(f"Diffs{tag}.png")
 
-    plt.show()
 
 
 def bid_ask_example():
-
     d = {
         5560.0: {'Ask': np.float64(178.89999999999998), 'Bid': np.float64(174.6)},
         5570.0: {'Ask': np.float64(169.10000000000002), 'Bid': np.float64(164.70000000000002)},
@@ -112,8 +110,33 @@ def bid_ask_example():
         5825.0: {'Ask': np.float64(-81.30000000000001), 'Bid': np.float64(-85.70000000000002)},
     }
     out = linear(d_quotes=d)
-    display_stuff(d, out)
+    display_stuff(d, out, tag="1")
+
+
+def bid_ask_example2():
+    d = {
+        5650.0: {'Ask': np.float64(114.40000000000003), 'Bid': np.float64(109.60000000000002)},
+        5675.0: {'Ask': np.float64(93.89999999999998), 'Bid': np.float64(84.69999999999999)},
+        5700.0: {'Ask': np.float64(65.69999999999999), 'Bid': np.float64(61.60000000000002)},
+        5725.0: {'Ask': np.float64(40.900000000000034), 'Bid': np.float64(37.099999999999966)},
+        5750.0: {'Ask': np.float64(16.5), 'Bid': np.float64(12.600000000000023)},
+        5775.0: {'Ask': np.float64(-8.199999999999989), 'Bid': np.float64(-12.0)},
+        5625.0: {'Ask': np.float64(143.0), 'Bid': np.float64(133.7)},
+        5610.0: {'Ask': np.float64(157.7), 'Bid': np.float64(148.39999999999998)},
+        5800.0: {'Ask': np.float64(-32.599999999999966), 'Bid': np.float64(-36.5)},
+        5600.0: {'Ask': np.float64(167.6), 'Bid': np.float64(158.6)},
+        5590.0: {'Ask': np.float64(179.0), 'Bid': np.float64(168.1)},
+        5580.0: {'Ask': np.float64(188.89999999999998), 'Bid': np.float64(177.8)},
+        5575.0: {'Ask': np.float64(195.8), 'Bid': np.float64(182.8)},
+        5570.0: {'Ask': np.float64(198.7), 'Bid': np.float64(187.60000000000002)},
+        5825.0: {'Ask': np.float64(-56.89999999999998), 'Bid': np.float64(-61.0)},
+        5560.0: {'Ask': np.float64(208.29999999999998), 'Bid': np.float64(197.50000000000003)}
+    }
+    out = linear(d_quotes=d)
+    display_stuff(d, out, tag="2")
 
 
 if __name__ == '__main__':
     bid_ask_example()
+    bid_ask_example2()
+    plt.show()
